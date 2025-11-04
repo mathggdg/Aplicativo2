@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>💡 Organizador Financeiro & Lembretes</title>
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
 </head>
 <body>
 
@@ -30,6 +31,10 @@
         <input type="text" id="titulo-lembrete" placeholder="Título">
         <textarea id="descricao-lembrete" placeholder="Descrição"></textarea>
         <input type="date" id="data-lembrete">
+        <select id="status-lembrete">
+            <option value="nao-realizado">Não realizado</option>
+            <option value="realizado">Realizado</option>
+        </select>
         <button id="salvar-lembrete">Salvar</button>
         <button id="cancelar-lembrete">Cancelar</button>
     </div>
@@ -71,5 +76,10 @@
 </div>
 
 <script src="script.js"></script>
+<script>
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('serviceworker.js');
+}
+</script>
 </body>
 </html>

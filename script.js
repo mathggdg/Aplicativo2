@@ -1,44 +1,31 @@
-// === ELEMENTOS ===
+// =====================
+// Seleção de telas
+// =====================
 const telaInicial = document.getElementById('tela-inicial');
 const telaLembretes = document.getElementById('tela-lembretes');
 const telaContas = document.getElementById('tela-contas');
 
-// Voltar
-const voltarLembretes = document.getElementById('voltar-inicial-lembretes');
-const voltarContas = document.getElementById('voltar-inicial-contas');
+const btnVoltarLembretes = document.getElementById('voltar-inicial-lembretes');
+const btnVoltarContas = document.getElementById('voltar-inicial-contas');
 
+function abrirTela(tela) {
+    telaInicial.style.display = 'none';
+    telaLembretes.style.display = 'none';
+    telaContas.style.display = 'none';
+    tela.style.display = 'block';
+}
+
+document.getElementById('opcao-lembretes').addEventListener('click', () => abrirTela(telaLembretes));
+document.getElementById('opcao-contas').addEventListener('click', () => abrirTela(telaContas));
+btnVoltarLembretes.addEventListener('click', () => abrirTela(telaInicial));
+btnVoltarContas.addEventListener('click', () => abrirTela(telaInicial));
+
+// =====================
 // Lembretes
+// =====================
 const listaLembretes = document.getElementById('lista-lembretes');
 const formLembrete = document.getElementById('form-lembrete');
 
-// Contas
-const listaContas = document.getElementById('lista-contas');
-const formConta = document.getElementById('form-conta');
-const totalGasto = document.getElementById('total-gasto');
-const totalPago = document.getElementById('total-pago');
-const totalPendente = document.getElementById('total-pendente');
-
-// Filtros
-const filtroMesLembretes = document.getElementById('filtro-mes-lembretes');
-const filtroMesContas = document.getElementById('filtro-mes-contas');
-
-// === FUNÇÃO PARA ABRIR TELA ===
-function abrirTela(tela){
-    telaInicial.classList.add('form-hidden');
-    telaLembretes.classList.add('form-hidden');
-    telaContas.classList.add('form-hidden');
-    tela.classList.remove('form-hidden');
-}
-
-// === BOTÕES INICIAIS ===
-document.getElementById('opcao-lembretes').addEventListener('click', () => abrirTela(telaLembretes));
-document.getElementById('opcao-contas').addEventListener('click', () => abrirTela(telaContas));
-
-// === BOTÕES VOLTAR ===
-voltarLembretes.addEventListener('click', () => abrirTela(telaInicial));
-voltarContas.addEventListener('click', () => abrirTela(telaInicial));
-
-// === Lembretes ===
 document.getElementById('btn-adicionar-lembrete').addEventListener('click', () => formLembrete.classList.remove('form-hidden'));
 document.getElementById('cancelar-lembrete').addEventListener('click', () => formLembrete.classList.add('form-hidden'));
 
@@ -46,28 +33,42 @@ document.getElementById('salvar-lembrete').addEventListener('click', () => {
     const titulo = document.getElementById('titulo-lembrete').value.trim();
     const desc = document.getElementById('descricao-lembrete').value.trim();
     const data = document.getElementById('data-lembrete').value;
+    const status = document.getElementById('status-lembrete').value;
     if(titulo && desc && data){
         const li = document.createElement('li');
         li.textContent = `${titulo} - ${desc} - ${data}`;
-        li.classList.add('slide-in');
+        li.dataset.status = status;
+        li.classList.add('slide-in', status);
+        li.addEventListener('click', () => {
+            li.dataset.status = li.dataset.status === 'realizado' ? 'nao-realizado' : 'realizado';
+            li.classList.toggle('realizado');
+            li.classList.toggle('nao-realizado');
+            salvarNoStorage();
+        });
         listaLembretes.appendChild(li);
         formLembrete.classList.add('form-hidden');
-        document.getElementById('titulo-lembrete').value = '';
-        document.getElementById('descricao-lembrete').value = '';
-        document.getElementById('data-lembrete').value = '';
+        limparFormLembrete();
         salvarNoStorage();
+        enviarNotificacao("📋 Novo lembrete", `${titulo} - ${desc}`);
     }
 });
 
-// Filtro de mês lembretes
-filtroMesLembretes.addEventListener('input', () => {
-    const mes = filtroMesLembretes.value; // yyyy-mm
-    Array.from(listaLembretes.children).forEach(li => {
-        li.style.display = li.textContent.includes(mes) ? 'flex' : 'none';
-    });
-});
+function limparFormLembrete(){
+    document.getElementById('titulo-lembrete').value = '';
+    document.getElementById('descricao-lembrete').value = '';
+    document.getElementById('data-lembrete').value = '';
+    document.getElementById('status-lembrete').value = 'nao-realizado';
+}
 
-// === Contas ===
+// =====================
+// Contas
+// =====================
+const listaContas = document.getElementById('lista-contas');
+const formConta = document.getElementById('form-conta');
+const totalGasto = document.getElementById('total-gasto');
+const totalPago = document.getElementById('total-pago');
+const totalPendente = document.getElementById('total-pendente');
+
 document.getElementById('btn-adicionar-conta').addEventListener('click', () => formConta.classList.remove('form-hidden'));
 document.getElementById('cancelar-conta').addEventListener('click', () => formConta.classList.add('form-hidden'));
 
@@ -79,35 +80,39 @@ document.getElementById('salvar-conta').addEventListener('click', () => {
     if(nome && valor && vencimento){
         const li = document.createElement('li');
         li.textContent = `${nome} - ${valor.toFixed(2)} - ${status} - ${vencimento}`;
+        li.dataset.status = status;
         li.classList.add('slide-in');
+        li.addEventListener('click', () => {
+            li.dataset.status = li.dataset.status === 'paga' ? 'nao-paga' : 'paga';
+            atualizarResumo();
+            salvarNoStorage();
+        });
         listaContas.appendChild(li);
         atualizarResumo();
         formConta.classList.add('form-hidden');
-        document.getElementById('nome-conta').value = '';
-        document.getElementById('valor-conta').value = '';
-        document.getElementById('status-conta').value = 'nao-paga';
-        document.getElementById('vencimento-conta').value = '';
+        limparFormConta();
         salvarNoStorage();
+        enviarNotificacao("💰 Nova conta", `${nome} - R$${valor.toFixed(2)} - ${status}`);
     }
 });
 
-// Filtro de mês contas
-filtroMesContas.addEventListener('input', () => {
-    const mes = filtroMesContas.value;
-    Array.from(listaContas.children).forEach(li => {
-        li.style.display = li.textContent.includes(mes) ? 'flex' : 'none';
-    });
-});
+function limparFormConta(){
+    document.getElementById('nome-conta').value = '';
+    document.getElementById('valor-conta').value = '';
+    document.getElementById('vencimento-conta').value = '';
+    document.getElementById('status-conta').value = 'nao-paga';
+}
 
-// === Resumo financeiro ===
+// =====================
+// Resumo financeiro
+// =====================
 function atualizarResumo(){
     let total=0, pago=0, pendente=0;
     Array.from(listaContas.children).forEach(li=>{
-        if(li.style.display === 'none') return; // filtrar somente visíveis
         const partes = li.textContent.split(' - ');
         const valor = parseFloat(partes[1]);
         total += valor;
-        if(partes[2]==='paga') pago += valor;
+        if(li.dataset.status === 'paga') pago += valor;
         else pendente += valor;
     });
     totalGasto.textContent = total.toFixed(2);
@@ -115,24 +120,73 @@ function atualizarResumo(){
     totalPendente.textContent = pendente.toFixed(2);
 }
 
-// === LocalStorage ===
+// =====================
+// LocalStorage
+// =====================
 function salvarNoStorage(){
-    const lembretes = Array.from(listaLembretes.children).map(li=>li.textContent);
-    const contas = Array.from(listaContas.children).map(li=>li.textContent);
+    const lembretes = Array.from(listaLembretes.children).map(li => ({ texto: li.textContent, status: li.dataset.status }));
+    const contas = Array.from(listaContas.children).map(li => ({ texto: li.textContent, status: li.dataset.status }));
     localStorage.setItem('lembretes', JSON.stringify(lembretes));
     localStorage.setItem('contas', JSON.stringify(contas));
 }
 
 function carregarDoStorage(){
     const lembretesSalvos = JSON.parse(localStorage.getItem('lembretes') || '[]');
-    lembretesSalvos.forEach(texto=>{
-        const li = document.createElement('li'); li.textContent = texto; li.classList.add('slide-in'); listaLembretes.appendChild(li);
+    lembretesSalvos.forEach(obj=>{
+        const li = document.createElement('li');
+        li.textContent = obj.texto;
+        li.dataset.status = obj.status;
+        li.classList.add('slide-in', obj.status);
+        li.addEventListener('click', () => {
+            li.dataset.status = li.dataset.status === 'realizado' ? 'nao-realizado' : 'realizado';
+            li.classList.toggle('realizado');
+            li.classList.toggle('nao-realizado');
+            salvarNoStorage();
+        });
+        listaLembretes.appendChild(li);
     });
+
     const contasSalvas = JSON.parse(localStorage.getItem('contas') || '[]');
-    contasSalvas.forEach(texto=>{
-        const li = document.createElement('li'); li.textContent = texto; li.classList.add('slide-in'); listaContas.appendChild(li);
+    contasSalvas.forEach(obj=>{
+        const li = document.createElement('li');
+        li.textContent = obj.texto;
+        li.dataset.status = obj.status;
+        li.addEventListener('click', () => {
+            li.dataset.status = li.dataset.status === 'paga' ? 'nao-paga' : 'paga';
+            atualizarResumo();
+            salvarNoStorage();
+        });
+        listaContas.appendChild(li);
     });
     atualizarResumo();
 }
 
 window.addEventListener('load', carregarDoStorage);
+
+// =====================
+// Notificações
+// =====================
+function enviarNotificacao(titulo, mensagem){
+    if(Notification.permission === 'granted'){
+        new Notification(titulo, { body: mensagem });
+    } else {
+        Notification.requestPermission();
+    }
+}
+
+// =====================
+// Filtros por mês
+// =====================
+document.getElementById('filtro-mes-lembretes').addEventListener('input', e => {
+    const mes = e.target.value;
+    Array.from(listaLembretes.children).forEach(li => {
+        li.style.display = li.textContent.includes(mes) ? 'flex' : 'none';
+    });
+});
+
+document.getElementById('filtro-mes-contas').addEventListener('input', e => {
+    const mes = e.target.value;
+    Array.from(listaContas.children).forEach(li => {
+        li.style.display = li.textContent.includes(mes) ? 'flex' : 'none';
+    });
+});
