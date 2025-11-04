@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💡 Organizador Financeiro & Lembretes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Tela Inicial -->
+<div id="tela-inicial" class="tela-inicial">
+    <h1>💡 Organizador</h1>
+    <p>Escolha uma opção para começar</p>
+    <div class="opcoes-iniciais">
+        <button id="opcao-lembretes">📋 Lembretes</button>
+        <button id="opcao-contas">💰 Contas</button>
+    </div>
+</div>
+
+<!-- Lembretes -->
+<div id="tela-lembretes" class="tela form-hidden">
+    <button id="voltar-inicial-lembretes" class="btn-voltar">⬅ Voltar</button>
+    <div class="filtro">
+        <label>Mês: <input type="month" id="filtro-mes-lembretes"></label>
+    </div>
+    <ul id="lista-lembretes"></ul>
+    <button id="btn-adicionar-lembrete" class="btn-float">+</button>
+    <div id="form-lembrete" class="form-hidden form-centralizado">
+        <input type="text" id="titulo-lembrete" placeholder="Título">
+        <textarea id="descricao-lembrete" placeholder="Descrição"></textarea>
+        <input type="date" id="data-lembrete">
+        <select id="prioridade-lembrete">
+            <option value="normal">Normal</option>
+            <option value="alta">Alta ⚠️</option>
+        </select>
+        <button id="salvar-lembrete">Salvar</button>
+        <button id="cancelar-lembrete">Cancelar</button>
+    </div>
+</div>
+
+<!-- Contas -->
+<div id="tela-contas" class="tela form-hidden">
+    <button id="voltar-inicial-contas" class="btn-voltar">⬅ Voltar</button>
+    <div class="filtro">
+        <label>Mês: <input type="month" id="filtro-mes-contas"></label>
+    </div>
+    <div class="resumo">
+        <div class="resumo-card total-gasto">
+            <p>Total gasto</p>
+            <span id="total-gasto">0</span>
+        </div>
+        <div class="resumo-card total-pago">
+            <p>Total pago</p>
+            <span id="total-pago">0</span>
+        </div>
+        <div class="resumo-card total-pendente">
+            <p>Total pendente</p>
+            <span id="total-pendente">0</span>
+        </div>
+    </div>
+    <ul id="lista-contas"></ul>
+    <button id="btn-adicionar-conta" class="btn-float">+</button>
+    <div id="form-conta" class="form-hidden form-centralizado">
+        <input type="text" id="nome-conta" placeholder="Nome da conta">
+        <input type="number" id="valor-conta" placeholder="Valor">
+        <input type="date" id="vencimento-conta">
+        <select id="status-conta">
+            <option value="nao-paga">Não Paga</option>
+            <option value="paga">Paga</option>
+        </select>
+        <button id="salvar-conta">Salvar</button>
+        <button id="cancelar-conta">Cancelar</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

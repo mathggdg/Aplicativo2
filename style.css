@@ -1,0 +1,179 @@
+:root {
+    --bg-color: #f0f0f0;
+    --text-color: #222;
+    --card-bg: #fff;
+    --primary: #0077cc;
+    --secondary: #005fa3;
+}
+
+body.dark {
+    --bg-color: #121212;
+    --text-color: #eee;
+    --card-bg: #1e1e1e;
+    --primary: #3399ff;
+    --secondary: #1f5fbf;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Tela inicial */
+.tela-inicial {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    gap: 30px;
+}
+
+.opcoes-iniciais { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    width: 60%; 
+}
+
+.opcoes-iniciais button {
+    padding: 20px 25px;
+    font-size: 1.6rem;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: var(--primary);
+    color: white;
+    transition: transform 0.3s;
+}
+
+.opcoes-iniciais button:hover { transform: scale(1.05); }
+
+/* Telas */
+.tela { 
+    opacity: 1; 
+    transition: opacity 0.4s, transform 0.4s; 
+}
+.tela.form-hidden { 
+    opacity: 0; 
+    transform: translateY(20px); 
+    pointer-events: none; 
+}
+
+/* Listas */
+li { 
+    background-color: var(--card-bg);
+    margin-bottom: 14px;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+li.slide-in { 
+    animation: slideIn 0.5s forwards; 
+}
+@keyframes slideIn { 
+    0% { opacity: 0; transform: translateY(20px); } 
+    100% { opacity: 1; transform: translateY(0); } 
+}
+
+/* Forms */
+.form-hidden { display: none; }
+.form-centralizado { 
+    position: fixed; 
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background-color: var(--card-bg); 
+    padding: 20px; 
+    border-radius: 12px; 
+    width: 90%; 
+    max-width: 400px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+input, textarea, select, button { 
+    margin-bottom: 10px; 
+    border-radius: 8px; 
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    width: 100%; 
+}
+
+button { 
+    border: none; 
+    background-color: var(--primary); 
+    color: white; 
+    cursor: pointer; 
+    font-weight: bold; 
+    transition: transform 0.2s; 
+}
+
+button:hover { transform: scale(1.05); }
+
+/* Botão flutuante */
+.btn-float {
+    position: fixed; 
+    right: 20px; 
+    width: 60px; 
+    height: 60px; 
+    border-radius: 50%; 
+    font-size: 2rem;
+    color: white; 
+    background-color: var(--primary); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+    cursor: pointer; 
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#btn-adicionar-lembrete { bottom: 20px; }
+#btn-adicionar-conta { bottom: 100px; }
+
+/* Botão voltar */
+.btn-voltar {
+    margin: 10px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    background-color: var(--secondary);
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-voltar:hover { transform: scale(1.05); }
+
+/* Resumo financeiro */
+.resumo { 
+    display: flex; 
+    justify-content: space-between; 
+    flex-wrap: wrap; 
+    margin-bottom: 12px; 
+}
+.resumo-card { 
+    flex: 1; 
+    min-width: 100px; 
+    margin: 5px; 
+    background-color: var(--card-bg); 
+    padding: 12px; 
+    border-radius: 12px; 
+    text-align: center; 
+    font-weight: bold; 
+}
+
+/* Responsivo */
+@media(max-width:480px){
+    .resumo { flex-direction: column; }
+    li { flex-direction: column; align-items: flex-start; }
+    .opcoes-iniciais { width: 90%; }
+}
